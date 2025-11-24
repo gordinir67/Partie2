@@ -6,22 +6,12 @@
 .split {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
   margin-bottom: 2rem;
 }
 
 .split > div {
   flex: 1 1 200px;
-  text-align: center;
-}
-
-.chart-container {
-  margin-top: 2rem;
-}
-
-.error {
-  margin-top: 1rem;
-  color: red;
   text-align: center;
 }

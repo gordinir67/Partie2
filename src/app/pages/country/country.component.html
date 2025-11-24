@@ -1,30 +1,23 @@
 <div>
-  <div>
-    <div class="center">
-      <div>{{ titlePage }}</div>
-    </div>
-    <div class="split">
-      <div>
-        <p>Number of entries</p>
-        <p>{{ totalEntries }}</p>
-      </div>
-      <div>
-        <p>Total Number of medals</p>
-        <p>{{ totalMedals }}</p>
-      </div>
-      <div>
-        <p>Total Number of athletes</p>
-        <p>{{ totalAthletes }}</p>
-      </div>
-    </div>
-  </div>
+  <app-country-card
+    [countryName]="titlePage"
+    [totalEntries]="totalEntries"
+    [totalMedals]="totalMedals"
+    [totalAthletes]="totalAthletes">
+  </app-country-card>
+
   <div class="chart-container wrapper-container">
     <div class="container">
-      <canvas id="countryChart">{{ lineChart }}</canvas>
-      <h2>Date</h2>
+      <canvas #countryChart></canvas>
+      <h2>Medals and athletes over time</h2>
     </div>
   </div>
+
   <div class="center">
     <a routerLink="">Go back</a>
+  </div>
+
+  <div *ngIf="error" class="error">
+    {{ error }}
   </div>
 </div>
