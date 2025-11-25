@@ -11,6 +11,8 @@ import { OlympicCountry } from '../../models/olympic-country.model';
 })
 export class HomeComponent implements OnInit {
   public titlePage = 'Olympic games statistics';
+  public descriptionPage =
+    'Explore Olympic data: countries, medals, athletes';
   public totalCountries = 0;
   public totalJOs = 0;
   public totalMedals = 0;
@@ -18,6 +20,7 @@ export class HomeComponent implements OnInit {
 
   public chartLabels: string[] = [];
   public chartData: number[] = [];
+  public countryIds: number[] = [];
 
   public error: string | null = null;
 
@@ -51,6 +54,7 @@ export class HomeComponent implements OnInit {
         this.totalMedals = medals;
         this.totalAthletes = athletes;
 
+        this.countryIds = countries.map(c => c.id);
         this.chartLabels = countries.map((country) => country.country);
         this.chartData = countries.map((country) =>
           country.participations.reduce(
@@ -65,7 +69,8 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public onCountrySelected(countryName: string): void {
-    this.router.navigate(['country', countryName]);
-  }
+public onCountrySelected(countryId: number): void {
+  this.router.navigate(['country', countryId]);
+}
+
 }

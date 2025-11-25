@@ -40,33 +40,41 @@ export class CountryComponent implements OnInit, OnDestroy {
     private readonly olympicService: OlympicService
   ) {}
 
-  public ngOnInit(): void {
-    this.subscription = this.route.paramMap
-      .pipe(
-        map((params: ParamMap) => params.get('countryName')),
-        switchMap((countryName: string | null) => {
-          if (!countryName) {
-            this.router.navigate(['not-found']);
-            return EMPTY;
-          }
-          this.titlePage = countryName;
-          return this.olympicService.getCountryByName(countryName);
-        })
-      )
-      .subscribe({
-        next: (country: OlympicCountry | undefined) => {
-          if (!country) {
-            this.router.navigate(['not-found']);
-            return;
-          }
-          this.setCountryData(country);
+public ngOnInit(): void {
+  this.subscription = this.route.paramMap
+    .pipe(
+      map((params: ParamMap) => {
+
+        const idString = params.get('id');
+        return idString ? Number(idString) : null;  
+      }),
+      switchMap((countryId: number | null) => {
+        if (!countryId) {
+          this.router.navigate(['not-found']);
+          return EMPTY;
+        }
+        return this.olympicService.getCountryById(countryId);
+      })
+    )
+    .subscribe({
+      next: (country: OlympicCountry | undefined) => {
+        if (!country) {
+          this.router.navigate(['not-found']);
+          return;
+        }
+
+        this.titlePage = country.country;
+        this.setCountryData(country);
+
+        setTimeout(() => {
           this.buildLineChart();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.error = error.message;
-        },
-      });
-  }
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.error = error.message;
+      },
+    });
+}
 
   public ngOnDestroy(): void {
     if (this.subscription) {

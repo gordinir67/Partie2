@@ -22,6 +22,14 @@ export class OlympicService {
     return this.olympics$;
   }
 
+  public getCountryById(id: number): Observable<OlympicCountry | undefined> {
+  return this.getOlympics().pipe(
+    map((countries: OlympicCountry[]) =>
+      countries.find((country: OlympicCountry) => country.id === id)
+    )
+  );
+}
+
   public getCountryByName(
     countryName: string
   ): Observable<OlympicCountry | undefined> {

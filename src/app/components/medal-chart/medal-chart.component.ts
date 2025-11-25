@@ -18,10 +18,11 @@ import { ActiveElement, ChartEvent } from 'chart.js';
   styleUrls: ['./medal-chart.component.scss'],
 })
 export class MedalChartComponent implements AfterViewInit, OnChanges {
+  
   @Input() public labels: string[] = [];
   @Input() public data: number[] = [];
-
-  @Output() public countrySelected = new EventEmitter<string>();
+  @Input() public countryIds: number[] = [];
+  @Output() public countrySelected = new EventEmitter<number>();
 
   @ViewChild('medalChartCanvas', { static: false })
   public medalChartCanvas!: ElementRef<HTMLCanvasElement>;
@@ -67,10 +68,10 @@ export class MedalChartComponent implements AfterViewInit, OnChanges {
           if (elements.length > 0) {
             const index = elements[0].index;
             const labels = chart.data.labels as string[] | undefined;
-            const countryName = labels && labels[index] ? labels[index] : undefined;
-            if (countryName) {
-              this.countrySelected.emit(countryName);
+            if (this.countryIds && this.countryIds[index] !== undefined) {
+            this.countrySelected.emit(this.countryIds[index]);
             }
+
           }
         },
       },
