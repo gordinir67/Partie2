@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OlympicService } from '../../services/olympic.service';
-import { OlympicCountry } from '../../models/olympic-country.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,13 +10,14 @@ import { OlympicCountry } from '../../models/olympic-country.model';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public titlePage = 'Olympic games statistics';
-  public descriptionPage =
+
+  public titlePage : string = 'Olympic games statistics';
+  public descriptionPage : string =
     'Explore Olympic data: countries, medals, athletes';
-  public totalCountries = 0;
-  public totalJOs = 0;
-  public totalMedals = 0;
-  public totalAthletes = 0;
+  public totalCountries!: number;
+  public totalJOs!: number;
+  public totalMedals!: number;
+  public totalAthletes!: number;
 
   public chartLabels: string[] = [];
   public chartData: number[] = [];
@@ -34,40 +35,37 @@ export class HomeComponent implements OnInit {
   }
 
   private loadData(): void {
-    this.olympicService.getOlympics().subscribe({
-      next: (countries: OlympicCountry[]) => {
-        this.totalCountries = countries.length;
-
-        const years = new Set<number>();
-        let medals = 0;
-        let athletes = 0;
-
-        countries.forEach((country: OlympicCountry) => {
-          country.participations.forEach((participation) => {
-            years.add(participation.year);
-            medals += participation.medalsCount;
-            athletes += participation.athleteCount;
-          });
-        });
-
-        this.totalJOs = years.size;
-        this.totalMedals = medals;
-        this.totalAthletes = athletes;
-
-        this.countryIds = countries.map(c => c.id);
-        this.chartLabels = countries.map((country) => country.country);
-        this.chartData = countries.map((country) =>
-          country.participations.reduce(
-            (sum: number, participation) => sum + participation.medalsCount,
-            0
-          )
-        );
-      },
-      error: (error: HttpErrorResponse) => {
-        this.error = error.message;
-      },
-    });
+    forkJoin({
+    countries: this.olympicService.getOlympics(),
+    totalCountries: this.olympicService.getTotalCountries(),
+    totalJOs: this.olympicService.getTotalParticipations(),
+    totalMedals: this.olympicService.getTotalMedals(),
+    totalAthletes: this.olympicService.getTotalAthletes(),
+    medalsByCountry: this.olympicService.getMedalsByCountry(),
+  }).subscribe({
+    next: ({
+      countries,
+      totalCountries,
+      totalJOs,
+      totalMedals,
+      totalAthletes,
+      medalsByCountry,
+    }) => {
+      this.countryIds = countries.map(c => c.id);
+      this.totalCountries = totalCountries;
+      this.totalJOs = totalJOs;
+      this.totalMedals = totalMedals;
+      this.totalAthletes = totalAthletes;
+      this.chartLabels = medalsByCountry.labels;
+      this.chartData = medalsByCountry.data;
+    }
+  });
   }
+  
+
+private handleError(error: HttpErrorResponse): void {
+  this.error = error.message;
+}
 
 public onCountrySelected(countryId: number): void {
   this.router.navigate(['country', countryId]);

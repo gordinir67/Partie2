@@ -1,31 +1,12 @@
 <div>
-  <div class="center">
-    <div>{{ titlePage }}</div>
-  </div>
-
-    <div class="descriptionPage">
-    <div>{{ descriptionPage }}</div>
-  </div>
-
-  <div class="split">
-    <div>
-      <p>Number of countries</p>
-      <p>{{ totalCountries }}</p>
-    </div>
-    <div>
-      <p>Number of JOs</p>
-      <p>{{ totalJOs }}</p>
-    </div>
-    <div>
-      <p>Number of medals</p>
-      <p>{{ totalMedals }}</p>
-    </div>
-    <div>
-      <p>Number of athletes</p>
-      <p>{{ totalAthletes }}</p>
-    </div>
-  </div>
-
+<app-header
+  [titlePage]="titlePage"
+  [descriptionPage]="descriptionPage"
+  [totalCountries]="totalCountries"
+  [totalJos]="totalJOs"
+  [totalMedals]="totalMedals"
+  [totalAthletes]="totalAthletes">
+</app-header>
   <div class="chart-container wrapper-container">
     <app-medal-chart
       [labels]="chartLabels"

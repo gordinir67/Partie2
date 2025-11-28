@@ -1,39 +1,32 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
+  OnInit
 } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Chart } from 'chart.js/auto';
-import { EMPTY, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { OlympicService } from '../../services/olympic.service';
-import { OlympicCountry } from '../../models/olympic-country.model';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-country',
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss'],
 })
-export class CountryComponent implements OnInit, OnDestroy {
-  @ViewChild('countryChart', { static: true })
-  public countryChartRef!: ElementRef<HTMLCanvasElement>;
 
-  public lineChart: Chart<'line', number[], string> | null = null;
-  public titlePage = '';
-  public totalEntries = 0;
-  public totalMedals = 0;
-  public totalAthletes = 0;
+export class CountryComponent implements OnInit {
+
+  public titlePage! : string;
+  public descriptionPage : string =
+    'Explore Country data: medals and athletes';
+  public totalJOs! : number;
+  public totalMedals! : number;
+  public totalAthletes! : number;
+
   public years: string[] = [];
   public medalsOverTime: number[] = [];
   public athletesOverTime: number[] = [];
   public error: string | null = null;
-
-  private subscription?: Subscription;
-
+  
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -41,100 +34,46 @@ export class CountryComponent implements OnInit, OnDestroy {
   ) {}
 
 public ngOnInit(): void {
-  this.subscription = this.route.paramMap
-    .pipe(
-      map((params: ParamMap) => {
+  const id = Number(this.route.snapshot.params['id']);
 
-        const idString = params.get('id');
-        return idString ? Number(idString) : null;  
-      }),
-      switchMap((countryId: number | null) => {
-        if (!countryId) {
-          this.router.navigate(['not-found']);
-          return EMPTY;
-        }
-        return this.olympicService.getCountryById(countryId);
-      })
-    )
-    .subscribe({
-      next: (country: OlympicCountry | undefined) => {
-        if (!country) {
-          this.router.navigate(['not-found']);
-          return;
-        }
+  // ID absent ou invalide → redirection immédiate
+  if (!id) {
+    this.router.navigate(['not-found']);
+    return;
+  }
 
-        this.titlePage = country.country;
-        this.setCountryData(country);
+  this.olympicService.getCountryById(id).subscribe({
+    next: (country) => {
+      if (!country) {
+        this.router.navigate(['not-found']);
+        return;
+      }
+      this.titlePage = country.country;
+    },
+  });
+ 
+  combineLatest([
+    this.olympicService.getYearsById(id),
+    this.olympicService.getMedalsById(id),
+    this.olympicService.getAthletesById(id),
+    this.olympicService.getTotalParticipationsById(id),
+    this.olympicService.getMedalsCountById(id),
+    this.olympicService.getAthletesCountById(id),
+  ]).subscribe({
+    next: ([years, medals, athletes, totalJOs, totalMedals, totalAthletes]) => {
+      this.years = years;
+      this.medalsOverTime = medals;
+      this.athletesOverTime = athletes;
+      this.totalJOs = totalJOs;
+      this.totalMedals = totalMedals;
+      this.totalAthletes = totalAthletes;
+    }
+  });
 
-        setTimeout(() => {
-          this.buildLineChart();
-        });
-      },
-      error: (error: HttpErrorResponse) => {
-        this.error = error.message;
-      },
-    });
 }
 
-  public ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-    if (this.lineChart) {
-      this.lineChart.destroy();
-    }
-  }
+ private handleError(error: HttpErrorResponse): void {
+  this.error = error.message;
+}
 
-  private setCountryData(country: OlympicCountry): void {
-    const participations = country.participations;
-
-    this.totalEntries = participations.length;
-    this.years = participations.map((participation) =>
-      participation.year.toString()
-    );
-    this.medalsOverTime = participations.map(
-      (participation) => participation.medalsCount
-    );
-    this.athletesOverTime = participations.map(
-      (participation) => participation.athleteCount
-    );
-
-    this.totalMedals = this.medalsOverTime.reduce(
-      (accumulator: number, value: number) => accumulator + value,
-      0
-    );
-    this.totalAthletes = this.athletesOverTime.reduce(
-      (accumulator: number, value: number) => accumulator + value,
-      0
-    );
-  }
-
-  private buildLineChart(): void {
-    if (!this.countryChartRef) {
-      return;
-    }
-    if (this.lineChart) {
-      this.lineChart.destroy();
-    }
-
-    this.lineChart = new Chart(this.countryChartRef.nativeElement, {
-      type: 'line',
-      data: {
-        labels: this.years,
-        datasets: [
-          {
-            label: 'Medals',
-            data: this.medalsOverTime,
-          },
-          {
-            label: 'Athletes',
-            data: this.athletesOverTime,
-          },
-        ],
-      },
-      options: {
-        aspectRatio: 2.5,
-      },
-    });
-  }
 }

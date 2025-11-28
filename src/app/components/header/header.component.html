@@ -1,0 +1,37 @@
+  <div class="center">
+    <div>{{ titlePage }}</div>
+  </div>
+
+    <div class="descriptionPage">
+    <div>{{ descriptionPage }}</div>
+  </div>
+
+  <!-- HOME PAGE STATS -->
+  <div class="split" *ngIf="totalCountries !== undefined">
+    <div>
+        <p>Pays : </p> <p> {{ totalCountries }}</p>
+    </div>
+    <div>
+        <p>Jeux Olympiques : </p> <p> {{ totalJos }}</p>
+    </div>
+    <div>
+        <p>Médailles : </p> <p> {{ totalMedals }}</p>
+    </div>
+    <div>
+        <p>Athlètes : </p> <p>{{ totalAthletes }}</p>
+    </div>      
+  </div>
+
+ <!-- country PAGE STATS -->
+
+   <div class="split" *ngIf="countryName">
+    <div>
+        <p>Participations : </p> <p> {{ totalJos }}</p>
+    </div>
+    <div>
+        <p>Médailles : </p> <p> {{ totalMedals }}</p>
+    </div>
+    <div>
+        <p>Athlètes : </p> <p>{{ totalAthletes }}</p>
+    </div>      
+  </div>

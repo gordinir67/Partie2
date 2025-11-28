@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { OlympicCountry } from '../models/olympic-country.model';
 
 @Injectable({
@@ -13,15 +13,16 @@ export class OlympicService {
 
   constructor(private http: HttpClient) {}
 
+  // retourne la liste complète des pays participants aux JO avec les détails de leur participations
   public getOlympics(): Observable<OlympicCountry[]> {
     if (!this.olympics$) {
       this.olympics$ = this.http
-        .get<OlympicCountry[]>(this.olympicUrl)
-        .pipe(shareReplay(1));
+        .get<OlympicCountry[]>(this.olympicUrl);
+        
     }
     return this.olympics$;
   }
-
+// retourne un pays ainsi que ses participations en fonction de son identifiant
   public getCountryById(id: number): Observable<OlympicCountry | undefined> {
   return this.getOlympics().pipe(
     map((countries: OlympicCountry[]) =>
@@ -29,27 +30,105 @@ export class OlympicService {
     )
   );
 }
+// retourne le nom d'un pays en fonction de son identifiant
+public getCountryNameById(id: number): Observable<string | undefined> {
+  return this.getCountryById(id).pipe(
+    map((country) => country ? country.country : undefined)
+  );
+}
+// retourne les années de participation d'un pays en fonction de son identifiant
+public getYearsById(id: number): Observable<string[]> {
+  return this.getCountryById(id).pipe(
+    map((country) => {  
+      if (!country) {   
+        return [];
+      }
+      return country.participations.map((p) => p.year.toString());
+    })
+  );
+}
+// retourne les villes où les JO ont eu lieu pour un pays donné
+public getCitiesById(id: number): Observable<string[]> {
+  return this.getCountryById(id).pipe(
+    map((country) => {      
+      if (!country) {   
+        return [];
+      } 
+      return country.participations.map((p) => p.city);
+    })
+  );
+}
 
-  public getCountryByName(
-    countryName: string
-  ): Observable<OlympicCountry | undefined> {
-    return this.getOlympics().pipe(
-      map((countries: OlympicCountry[]) =>
-        countries.find(
-          (country: OlympicCountry) =>
-            country.country.toLowerCase() === countryName.toLowerCase()
-        )
-      )
-    );
-  }
+// retourne le nombre de médailles obtenues par un pays à chaque participation
+public getMedalsById(id: number): Observable<number[]> {
+  return this.getCountryById(id).pipe(
+    map((country) => {
+      if (!country) {   
+        return [];
+      } 
+      return country.participations.map((p) => p.medalsCount);
+    })
+  );
+}
+// retourne le nombre d'athlètes envoyés par un pays à chaque participation
+public getAthletesById(id: number): Observable<number[]> {
+  return this.getCountryById(id).pipe(
+    map((country) => {
+      if (!country) {   
+        return [];
+      }
+      return country.participations.map((p) => p.athleteCount);
+    })
+  );
+}
+// retourne le nombre total de médailles obtenues par un pays
+public getMedalsCountById(id: number): Observable<number> {
+  return this.getCountryById(id).pipe(
+    map((country) => {
+      if (!country) {
+        return 0;
+      }
+      return country.participations.reduce(
+        (sum, p) => sum + p.medalsCount,
+        0
+      );
+    })
+  );
+}
+// retourne le nombre total d'athlètes envoyés par un pays
+public getAthletesCountById(id: number): Observable<number> {
+  return this.getCountryById(id).pipe(
+    map((country) => {  
+      if (!country) {
+        return 0;
+      }
+      return country.participations.reduce(
+        (sum, p) => sum + p.athleteCount,
+        0
+      );
+    })
+  );
+}
 
+// retourne le nombre total de participations d'un pays aux JO
+public getTotalParticipationsById(id: number): Observable<number> {
+  return this.getCountryById(id).pipe(
+    map((country) => {
+      if (!country) {
+        return 0;
+      }   
+      return country.participations.length;
+    })
+  );
+}
+// retourne le nombre total de pays participants aux JO
   public getTotalCountries(): Observable<number> {
     return this.getOlympics().pipe(
       map((countries: OlympicCountry[]) => countries.length)
     );
   }
-
-  public getTotalJOs(): Observable<number> {
+// retourne le nombre total de participations aux JO
+  public getTotalParticipations(): Observable<number> {
     return this.getOlympics().pipe(
       map((countries: OlympicCountry[]) => {
         const years = new Set<number>();
@@ -62,7 +141,7 @@ export class OlympicService {
       })
     );
   }
-
+// retourne le nombre total de médailles obtenues par tous les pays participants aux JO
   public getTotalMedals(): Observable<number> {
     return this.getOlympics().pipe(
       map((countries: OlympicCountry[]) =>
@@ -76,7 +155,7 @@ export class OlympicService {
       )
     );
   }
-
+// retourne le nombre total d'athlètes envoyés par tous les pays participants aux JO
   public getTotalAthletes(): Observable<number> {
     return this.getOlympics().pipe(
       map((countries: OlympicCountry[]) =>
@@ -90,19 +169,22 @@ export class OlympicService {
       )
     );
   }
-
+  // retourne les labels (noms des pays) et les données (nombre de médailles) pour tous les pays participants aux JO
+  // TRIER PAR ordre alphabétique des pays
   public getMedalsByCountry(): Observable<{ labels: string[]; data: number[] }> {
     return this.getOlympics().pipe(
       map((countries: OlympicCountry[]) => {
-        const labels = countries.map((country) => country.country);
-        const data = countries.map((country) =>
-          country.participations.reduce(
-            (sum: number, participation) => sum + participation.medalsCount,
-            0
-          )
-        );
-        return { labels, data };
-      })
+      const sorted = [...countries].sort((a, b) =>
+        a.country.localeCompare(b.country)
+      );
+      const labels = sorted.map(c => c.country);
+      const data = sorted.map(c =>
+        c.participations.reduce((sum, p) => sum + p.medalsCount, 0)
+      );
+      return { labels, data };
+    })
     );
   }
+
 }
+

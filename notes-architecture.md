@@ -64,8 +64,38 @@ Calculs de totaux et participations répétés
 
 Création/destroy de charts répétée
 
-Extraction manuelle des mêmes champs dans plusieurs composants
+Extraction manuelle des mêmes champs dans plusieurs 
 
+Code scss dupliquée dans les composants :
+
+.chart-container {
+  margin-top: 2rem;
+}
+// .wrapper-container {
+//   display: flex;
+//   justify-content: center;
+// }
+.split > div {
+  flex: 1 1 200px;
+  text-align: center;
+}
+@media screen and (max-width: 1000px) {
+  .container {
+    width: 100%;
+  }
+}
+.container {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.error {
+  margin-top: 1rem;
+  color: red;
+  text-align: center;
+}
+
+Egalement .split dupliqué.
 #### PARTIE 2 : Nouvelle arborescence propre et explications:
 
 

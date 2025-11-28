@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -17,7 +16,7 @@ import { ActiveElement, ChartEvent } from 'chart.js';
   templateUrl: './medal-chart.component.html',
   styleUrls: ['./medal-chart.component.scss'],
 })
-export class MedalChartComponent implements AfterViewInit, OnChanges {
+export class MedalChartComponent implements OnChanges {
   
   @Input() public labels: string[] = [];
   @Input() public data: number[] = [];
@@ -29,11 +28,6 @@ export class MedalChartComponent implements AfterViewInit, OnChanges {
 
   private chart: Chart<'pie', number[], string> | null = null;
 
-  public ngAfterViewInit(): void {
-    if (this.labels.length > 0 && this.data.length > 0) {
-      this.buildChart();
-    }
-  }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (

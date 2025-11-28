@@ -1,33 +1,5 @@
-.wrapper-container {
-  display: flex;
-  justify-content: center;
-}
-
-.container {
-  width: 50%;
-  h2 {
-    text-align: center;
-    color: gray;
-  }
-}
-
-@media screen and (max-width: 1000px) {
-  .container {
-    width: 100%;
-  }
-}
-
 .center {
   text-align: center;
   margin-top: 2rem;
 }
 
-.error {
-  margin-top: 1rem;
-  color: red;
-  text-align: center;
-}
-
-.chart-container {
-  margin-top: 2rem;
-}
