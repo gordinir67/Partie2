@@ -1,4 +1,4 @@
-<div>
+<main class="container">
 <app-header
   [titlePage]="titlePage"
   [descriptionPage]="descriptionPage"
@@ -7,16 +7,16 @@
   [totalMedals]="totalMedals"
   [totalAthletes]="totalAthletes">
 </app-header>
-  <div class="chart-container wrapper-container">
+
     <app-medal-chart
       [labels]="chartLabels"
       [data]="chartData"
       [countryIds]="countryIds"
       (countrySelected)="onCountrySelected($event)">
     </app-medal-chart>
-  </div>
 
-  <div *ngIf="error" class="error">
+
+  <!-- <div *ngIf="error" class="error">
     {{ error }}
-  </div>
-</div>
+  </div> -->
+</main>

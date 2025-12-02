@@ -1,13 +1,10 @@
-  <div class="center">
-    <div>{{ titlePage }}</div>
-  </div>
-
-    <div class="descriptionPage">
-    <div>{{ descriptionPage }}</div>
-  </div>
+<header class="header">
+  <h1 class="title">{{ titlePage }}</h1>
+  <p class="subtitle">{{ descriptionPage }}</p>
+</header>
 
   <!-- HOME PAGE STATS -->
-  <div class="split" *ngIf="totalCountries !== undefined">
+  <section class="split" aria-label="Statistiques principales" *ngIf="totalCountries !== undefined">
     <div>
         <p>Pays : </p> <p> {{ totalCountries }}</p>
     </div>
@@ -20,11 +17,11 @@
     <div>
         <p>Athlètes : </p> <p>{{ totalAthletes }}</p>
     </div>      
-  </div>
+  </section>
 
  <!-- country PAGE STATS -->
 
-   <div class="split" *ngIf="countryName">
+   <section class="split" aria-label="Statistiques principales" *ngIf="countryName">
     <div>
         <p>Participations : </p> <p> {{ totalJos }}</p>
     </div>
@@ -34,4 +31,4 @@
     <div>
         <p>Athlètes : </p> <p>{{ totalAthletes }}</p>
     </div>      
-  </div>
+   </section>

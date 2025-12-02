@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -6,7 +6,8 @@ import { Chart } from 'chart.js';
   standalone: true,
   imports: [],
   templateUrl: './linechart.component.html',
-  styleUrl: './linechart.component.scss'
+  styleUrl: './linechart.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class LinechartComponent implements OnChanges {
 

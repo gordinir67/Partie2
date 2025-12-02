@@ -1,5 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { OlympicService } from '../../services/olympic.service';
 import { forkJoin } from 'rxjs';
@@ -8,6 +7,7 @@ import { forkJoin } from 'rxjs';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit {
 
@@ -62,11 +62,6 @@ export class HomeComponent implements OnInit {
   });
   }
   
-
-private handleError(error: HttpErrorResponse): void {
-  this.error = error.message;
-}
-
 public onCountrySelected(countryId: number): void {
   this.router.navigate(['country', countryId]);
 }

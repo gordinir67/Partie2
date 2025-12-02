@@ -12,7 +12,7 @@ export class OlympicService {
   private olympics$?: Observable<OlympicCountry[]>;
 
   constructor(private http: HttpClient) {}
-
+//behaviour subject pour stocker les données des pays olympiques
   // retourne la liste complète des pays participants aux JO avec les détails de leur participations
   public getOlympics(): Observable<OlympicCountry[]> {
     if (!this.olympics$) {

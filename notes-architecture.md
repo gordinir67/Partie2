@@ -142,15 +142,14 @@ src/
         not-found.page.spec.ts
 
     components/
-      shared/
         country-card/
           country-card.component.ts
           country-card.component.html
           country-card.component.scss
-        stats-summary/
-          stats-summary.component.ts
-          stats-summary.component.html
-          stats-summary.component.scss
+        header/
+          header.component.ts
+          header.component.html
+          header.component.scss
         medals-chart/
           medals-chart.component.ts
           medals-chart.component.html
@@ -165,12 +164,3 @@ src/
         olympic-country.model.ts
         participation.model.ts
 
-medal-chart : affiche le graphique en camembert
-
-country-card : carte récapitulative d’un pays
-
-Service ajouté suivant le pattern singleton, gère le chargement des données JSON et facilement évolutif vers une API, le cache des données (shareReplay), les calculs globaux (totaux, années, médailles…)
-
-Supression des any, console.log()...
-
-HomeComponent et CountryComponent ont été refactorisés.

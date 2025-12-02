@@ -1,71 +1,255 @@
-/* You can add global styles to this file, and also import other style files */
-.chart-container {
-  margin-top: 2rem;
+/* ============================================================
+   RESET GLOBAL
+============================================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
 }
-// .wrapper-container {
-//   display: flex;
-//   justify-content: center;
-// }
-.split > div {
-  flex: 1 1 200px;
-  text-align: center;
+
+/* Intégration naturelle dans la grille */
+app-header,
+app-medal-chart,
+app-linechart {
+  display: contents;
 }
-@media screen and (max-width: 1000px) {
-  .container {
-    width: 100%;
-  }
-}
+
+/* ============================================================
+   GRILLE GLOBALE — MOBILE FIRST
+============================================================ */
 .container {
-  width: 50%;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 🔥 Mobile enforced */
+  gap: 1rem;
+  margin: 1rem;
 }
 
-.error {
-  margin-top: 1rem;
-  color: red;
+/* ============================================================
+   HEADER
+============================================================ */
+.header {
+  grid-column: 1 / -1;
   text-align: center;
-}
-.heading {
-    flex-direction: column;
+  padding: 0.5rem 1rem 1rem;
 }
 
-.center {
+.title {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  background: #0b868f;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.625rem;
+  color: white;
+  display: inline-block;
+}
+
+.subtitle {
+  margin-top: 0.55rem;
+  opacity: 0.8;
+  font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+}
+
+/* ============================================================
+   SPLIT (STATISTIQUES) — MOBILE FIRST
+============================================================ */
+.split {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.split > div {
+  padding: 0.4rem;
+  border: 0.0625rem solid #0b868f;
+  border-radius: 0.55rem;
+  background: white;
+  color: #555;
+  width: 100%;
+  max-width: 18rem;
+}
+
+.split > div p {
+  margin: 0.15rem 0;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.split > div p:last-child {
+  font-weight: 700;
+  color: #000;
+}
+
+/* ============================================================
+   CHART — MOBILE FIRST
+============================================================ */
+.chart-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  margin-top: 1.4rem;
+}
+
+.chart-container canvas {
+  width: 100%;
+  max-width: 16rem;
+  aspect-ratio: 1 / 1;
+  height: auto !important;
+  display: block;
+}
+
+/* Large LINE CHART (country page) */
+.wide-chart canvas {
+  width: 100% !important;
+  max-width: none !important;
+  aspect-ratio: auto !important;
+}
+
+/* ============================================================
+   🔥 MOBILE ULTRA OPTIMISÉ (< 768px)
+============================================================ */
+@media (max-width: 767px) {
+
+  .container {
+    grid-template-columns: repeat(4, 1fr); /* 🔥 Reaffirm mobile layout */
+    margin: 0.5rem;
+    gap: 0.75rem;
+  }
+
+  .subtitle {
+    margin-top: 0.35rem;
+  }
+
+  /* --- Tuiles 30% plus petites --- */
+  .split {
+    margin-top: 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .split > div {
+    max-width: 14rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  .split > div p {
+    font-size: 0.78rem;
+    margin: 0.1rem 0;
+  }
+
+  /* --- Pie chart compact mais propre --- */
+  .chart-container:not(.wide-chart) canvas {
+    max-width: 14rem;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* --- Line chart lisible --- */
+  .wide-chart canvas {
+    width: 100% !important;
+    min-height: 260px !important;
+    max-height: 300px !important;
+    margin-top: 0.5rem;
+  }
+
+  .chart-container {
+    margin-top: 0.7rem;
     display: flex;
     justify-content: center;
-    margin: 5px;
-
-    div {
-        background: #0b868f;
-        padding: 10px;
-        border-radius: 10px;
-        color: white;
-    }
-}
-
-.split {
-  display: flex;
-  flex-direction: row;   // ou wrap si voulu
-  flex-wrap: wrap;       // ajouté si utile globalement
-  justify-content: center;
-  gap: 1rem;             // ou 1rem si tu préfères
-  margin-bottom: 2rem;   // remplace le margin: 5px global qui était incohérent
-
-  div {
-    padding: 10px;
-    border: solid #0b868f 1px;
-    border-radius: 10px;
-    color: gray;
-
-    p {
-      text-align: center;
-      margin: 0;
-    }
-
-    p:last-child {
-      font-weight: bold;
-      color: black;
-    }
+    align-items: center;
   }
 }
 
+/* ============================================================
+   TABLETTE (768–1199px)
+============================================================ */
+@media (min-width: 768px) and (max-width: 1199px) {
 
+  .container {
+    grid-template-columns: repeat(8, 1fr);
+    // gap: 1.25rem;
+    // margin: 1.25rem;
+
+    justify-items: center;
+    align-content: start;
+    width: 95%;
+    overflow-x: hidden;
+    min-height: 90vh;
+  }
+
+  .header {
+    padding-bottom: 0.5rem;
+  }
+
+  .split {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+
+  .split > div {
+    min-width: 10rem;
+    padding: 0.5rem;
+    margin-inline: 0.5rem;
+    max-width: 14rem;
+  }
+
+  /* Centrage du graphique */
+  .chart-container {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 1rem;
+  }
+
+  .chart-container canvas {
+    max-width: 24rem;
+  }
+}
+
+/* ============================================================
+   DESKTOP (≥ 1200px)
+============================================================ */
+@media (min-width: 1200px) {
+
+  .container {
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 1.25rem;
+    margin-block: 1rem;
+    margin-inline: 1rem 3rem;
+    align-items: start;
+  }
+
+  .header {
+    padding-bottom: 0.25rem;
+  }
+
+  .split {
+    grid-column: 1 / span 4;
+    margin-top: 6rem;
+    align-items: stretch;
+  }
+
+  .split > div {
+    padding: 0.75rem;
+    max-width: 20rem;
+  }
+
+  .chart-container {
+    grid-column: 5 / span 8;
+    justify-content: flex-start;
+    margin-top: 1.5rem;
+  }
+
+  .chart-container canvas {
+    max-width: 28rem;
+  }
+}

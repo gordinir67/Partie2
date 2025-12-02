@@ -1,4 +1,4 @@
-<div>
+<main class="container">
   <app-header
     [titlePage]="titlePage"
     [countryName]="titlePage"
@@ -7,7 +7,7 @@
     [totalMedals]="totalMedals"
     [totalAthletes]="totalAthletes">
   </app-header>
-><app-linechart
+<app-linechart
     [years]="years"
     [medalsOverTime]="medalsOverTime"
     [athletesOverTime]="athletesOverTime">
@@ -17,7 +17,7 @@
     <a routerLink="">Go back</a>
   </div>
 
-  <div *ngIf="error" class="error">
+  <!-- <div *ngIf="error" class="error">
     {{ error }}
-  </div>
-</div>
+  </div> -->
+</main>

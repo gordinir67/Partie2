@@ -7,6 +7,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { ActiveElement, ChartEvent } from 'chart.js';
@@ -15,6 +16,7 @@ import { ActiveElement, ChartEvent } from 'chart.js';
   selector: 'app-medal-chart',
   templateUrl: './medal-chart.component.html',
   styleUrls: ['./medal-chart.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MedalChartComponent implements OnChanges {
   
@@ -57,6 +59,8 @@ export class MedalChartComponent implements OnChanges {
         ],
       },
       options: {
+          responsive: true,
+  maintainAspectRatio: false, 
         aspectRatio: 2.5,
         onClick: (event: ChartEvent, elements: ActiveElement[], chart: Chart) => {
           if (elements.length > 0) {

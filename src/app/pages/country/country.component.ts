@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   OnInit
@@ -72,8 +71,5 @@ public ngOnInit(): void {
 
 }
 
- private handleError(error: HttpErrorResponse): void {
-  this.error = error.message;
-}
 
 }

@@ -1,5 +1,15 @@
 .center {
-  text-align: center;
-  margin-top: 2rem;
+  grid-column: 1 / -1;       /* occupe toute la largeur de la grille */
+  display: flex;             /* active flexbox */
+  justify-content: center;   /* centre horizontalement */
+     /* petit espace au-dessus */
+}
+
+.center a {
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  background: #0b868f;
+  color: white;
+  border-radius: 0.5rem;
 }
 
